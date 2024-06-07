@@ -1,4 +1,8 @@
+from direction import Direction
+
+
 class Snake():
+
     def __init__(self):
         self.position = [100, 50]
         self.body = [
@@ -7,3 +11,4 @@ class Snake():
                 [80, 50],
                 [70, 50]
         ]
+        self.direction: Direction = Direction.RIGHT

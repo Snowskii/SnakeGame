@@ -56,3 +56,52 @@ class Game:
                 if event.key == pygame.K_q:
                     return Commands.QUIT
         return direction
+
+    def play(self) -> None:
+        while True:
+
+            output = self.handle_events(self.snake.direction)
+            if output != Commands.QUIT:
+                self.snake.move_snake(output)
+                self.snake.direction = output
+            else:
+                self.game_over()
+
+            self.snake.body.insert(0, list(self.snake.position))
+            if self.snake.position[0] == self.apple.position[0] and \
+                    self.snake.position[1] == self.apple.position[1]:
+                self.score += 1
+                self.apple.spawn = False
+            else:
+                self.snake.body.pop()
+
+            if not self.apple.spawn:
+                self.apple.set_random_pos()
+                self.apple.spawn = True
+
+            self.window.fill(Color.BLACK)
+
+            for pos in self.snake.body:
+                pygame.draw.rect(self.window, Color.GREEN,
+                                 pygame.Rect(pos[0], pos[1], 10, 10))
+            pygame.draw.rect(self.window, Color.WHITE, pygame.Rect(
+                self.apple.position[0], self.apple.position[1], 10, 10))
+
+            # Game Over conditions
+            if self.snake.position[0] < 0 or self.snake.position[0] > \
+                    self.window_x-10:
+                self.game_over()
+            if self.snake.position[1] < 0 or self.snake.position[1] > \
+                    self.window_y-10:
+                self.game_over()
+
+            for block in self.snake.body[1:]:
+                if self.snake.position[0] == block[0] and \
+                        self.snake.position[1] == block[1]:
+                    self.game_over()
+
+            self.show_score(Color.WHITE, 'times new roman', 20, self.window)
+
+            pygame.display.update()
+
+            self.fps.tick(self.snake_speed)

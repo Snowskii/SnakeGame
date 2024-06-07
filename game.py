@@ -1,6 +1,6 @@
 import pygame
 import time
-from direction import Direction
+from commands import Commands
 from color import Color
 from snake import Snake
 from apple import Apple
@@ -42,30 +42,17 @@ class Game:
         score_rect = score_surface.get_rect()
         game_window.blit(score_surface, score_rect)
 
-    def handle_events(self, direction: Direction) -> Direction:
+    def handle_events(self, direction: Commands) -> Commands:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP and direction != Direction.DOWN:
-                    return Direction.UP
-                if event.key == pygame.K_DOWN and direction != Direction.UP:
-                    return Direction.DOWN
-                if event.key == pygame.K_LEFT and direction != Direction.RIGHT:
-                    return Direction.LEFT
-                if event.key == pygame.K_RIGHT and direction != Direction.LEFT:
-                    return Direction.RIGHT
+                if event.key == pygame.K_UP and direction != Commands.DOWN:
+                    return Commands.UP
+                if event.key == pygame.K_DOWN and direction != Commands.UP:
+                    return Commands.DOWN
+                if event.key == pygame.K_LEFT and direction != Commands.RIGHT:
+                    return Commands.LEFT
+                if event.key == pygame.K_RIGHT and direction != Commands.LEFT:
+                    return Commands.RIGHT
                 if event.key == pygame.K_q:
-                    return Direction.QUIT
+                    return Commands.QUIT
         return direction
-
-    def move_snake(self, direction) -> None:
-        match direction:
-            case Direction.UP:
-                self.snake.position[1] -= 10
-            case Direction.DOWN:
-                self.snake.position[1] += 10
-            case Direction.LEFT:
-                self.snake.position[0] -= 10
-            case Direction.RIGHT:
-                self.snake.position[0] += 10
-            case Direction.QUIT:
-                self.game_over()

@@ -1,17 +1,23 @@
 import pygame
 from game import Game
 from color import Color
+from commands import Commands
 
 game = Game()
 
 # Main Function
 while True:
 
-    game.snake.direction = game.handle_events(game.snake.direction)
-    game.move_snake(game.snake.direction)
+    output = game.handle_events(game.snake.direction)
+    if output != Commands.QUIT:
+        game.snake.move_snake(output)
+        game.snake.direction = output
+    else:
+        game.game_over()
 
     game.snake.body.insert(0, list(game.snake.position))
-    if game.snake.position[0] == game.apple.position[0] and game.snake.position[1] == game.apple.position[1]:
+    if game.snake.position[0] == game.apple.position[0] and \
+            game.snake.position[1] == game.apple.position[1]:
         game.score += 1
         game.apple.spawn = False
     else:
@@ -19,8 +25,8 @@ while True:
 
     if not game.apple.spawn:
         game.apple.set_random_pos()
+        game.apple.spawn = True
 
-    game.apple.spawn = True
     game.window.fill(Color.BLACK)
 
     for pos in game.snake.body:
